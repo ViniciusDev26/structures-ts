@@ -1,10 +1,23 @@
 {
   "name": "structures-ts",
-  "module": "lib/index.ts",
-  "version": "1.0.1",
+  "version": "1.0.6",
   "type": "module",
+  "main": "dist/index.js",
+  "types": "dist/index.d.ts",
+  "files": [
+    "/dist"
+  ],
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/ViniciusDev26/structures-ts"
+  },
+  "scripts": {
+    "build": "rimraf dist && tsc"
+  },
   "devDependencies": {
-    "@types/bun": "latest"
+    "@types/bun": "latest",
+    "rimraf": "^5.0.5",
+    "vitest": "^1.2.1"
   },
   "peerDependencies": {
     "typescript": "^5.0.0"
