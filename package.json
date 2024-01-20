@@ -1,5 +1,5 @@
 {
-  "name": "basic-structures-ts",
+  "name": "structures-ts",
   "module": "lib/index.ts",
   "version": "1.0.1",
   "type": "module",

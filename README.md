@@ -1,15 +1,30 @@
-# basic-structures-ts
+# structures-ts
 
-To install dependencies:
 
+## Overview
+This lib is a helper to construct complex estructures using typescript
+
+Current Structures:
+- Watched List
+
+
+## Get Started
 ```bash
-bun install
+npm install structures-ts
 ```
 
-To run:
-
-```bash
-bun run index.ts
+Import on project:
+```ts
+import { WatchedList } from "structures-ts"
 ```
 
-This project was created using `bun init` in bun v1.0.23. [Bun](https://bun.sh) is a fast all-in-one JavaScript runtime.
+and use
+
+```ts
+  class MusicList extends WatchedList<Music> {
+    // This method is used to compare if objects is equals
+    compareItems(a: Music, b: Music): boolean {
+      return a.name === b.name;
+    }
+  }
+```
