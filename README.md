@@ -28,3 +28,6 @@ and use
     }
   }
 ```
+
+## Links:
+- [NPM: structure-ts](https://www.npmjs.com/package/structures-ts)
