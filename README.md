@@ -6,6 +6,7 @@ This lib is a helper to construct complex estructures using typescript
 
 Current Structures:
 - Watched List
+- Stack
 
 
 ## Get Started
