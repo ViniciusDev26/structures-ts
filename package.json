@@ -13,10 +13,14 @@
   },
   "scripts": {
     "build": "rimraf dist && tsc"
+    "build": "rimraf dist && tsc",
+    "test": "vitest"
   },
   "devDependencies": {
     "rimraf": "^5.0.5",
     "vitest": "^1.2.1"
+    "rimraf": "^6.0.1",
+    "vitest": "^3.0.6"
   },
   "peerDependencies": {
     "typescript": "^5.0.0"
