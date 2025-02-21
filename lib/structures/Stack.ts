@@ -1,32 +1,28 @@
-export class Stack<T> {
-  private _stack: T[] = [];
+export function Stack<T>(params?: StackParams<T>) {
+	let stack: T[] = params?.initialItems ?? [];
 
-  constructor(items?: T[]) {
-    if (!items) return;
-    this._stack = items;
-  }
+	return {
+		push: (item: T) => {
+			stack.push(item);
+		},
+		pop: () => {
+			return stack.pop();
+		},
+		peek: () => {
+			return stack[stack.length - 1];
+		},
+		get size() {
+			return stack.length;
+		},
+		get isEmpty() {
+			return stack.length === 0;
+		},
+		clear: () => {
+			stack = [];
+		},
+	};
+}
 
-  public push(item: T): void {
-      this._stack.push(item);
-  }
-
-  public pop(): T | undefined {
-      return this._stack.pop();
-  }
-
-  public peek(): T | undefined {
-      return this._stack[this._stack.length - 1];
-  }
-
-  public get size(): number {
-      return this._stack.length;
-  }
-
-  public get isEmpty(): boolean {
-      return this._stack.length === 0;
-  }
-
-  public clear(): void {
-      this._stack = [];
-  }
+export interface StackParams<T> {
+	initialItems?: T[];
 }

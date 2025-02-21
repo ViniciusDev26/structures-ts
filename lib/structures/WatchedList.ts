@@ -1,110 +1,87 @@
-export abstract class WatchedList<T> {
-  public currentItems: T[]
-  private initial: T[]
-  private new: T[]
-  private removed: T[]
+export function WatchedList<T>({
+	compareItems,
+	initialItems,
+}: WatchedListParams<T>) {
+	let currentItems = initialItems || [];
+	let initial = initialItems || [];
+	let new_items = [];
+	let removed = [];
 
-  constructor(initialItems?: T[]) {
-    this.currentItems = initialItems || []
-    this.initial = initialItems || []
-    this.new = []
-    this.removed = []
-  }
+	function isNewItem(item: T) {
+		return new_items.filter((v) => compareItems(item, v)).length !== 0;
+	}
 
-  abstract compareItems(a: T, b: T): boolean
+	function isCurrentItem(item: T) {
+		return currentItems.filter((v) => compareItems(item, v)).length !== 0;
+	}
 
-  public getItems(): T[] {
-    return this.currentItems
-  }
+	function isRemovedItem(item: T) {
+		return removed.filter((v) => compareItems(item, v)).length !== 0;
+	}
 
-  public getNewItems(): T[] {
-    return this.new
-  }
+	function removeFromNew(item: T) {
+		new_items = new_items.filter((v) => !compareItems(v, item));
+	}
 
-  public getRemovedItems(): T[] {
-    return this.removed
-  }
+	function removeFromCurrent(item: T) {
+		currentItems = currentItems.filter((v) => !compareItems(v, item));
+	}
 
-  private isCurrentItem(item: T): boolean {
-    return (
-      this.currentItems.filter((v: T) => this.compareItems(item, v)).length !==
-      0
-    )
-  }
+	function removeFromRemoved(item: T) {
+		removed = removed.filter((v) => !compareItems(v, item));
+	}
 
-  private isNewItem(item: T): boolean {
-    return this.new.filter((v: T) => this.compareItems(item, v)).length !== 0
-  }
+	function wasAddedInitially(item: T) {
+		return initial.filter((v) => compareItems(item, v)).length !== 0;
+	}
 
-  private isRemovedItem(item: T): boolean {
-    return (
-      this.removed.filter((v: T) => this.compareItems(item, v)).length !== 0
-    )
-  }
+	return {
+		getItems: () => currentItems,
+		getNewItems: () => new_items,
+		getRemovedItems: () => removed,
+		exists: (item: T) => isCurrentItem(item),
+		add: (item: T) => {
+			if (isRemovedItem(item)) {
+				removeFromRemoved(item);
+			}
 
-  private removeFromNew(item: T): void {
-    this.new = this.new.filter(v => !this.compareItems(v, item))
-  }
+			if (!isNewItem(item) && !wasAddedInitially(item)) {
+				new_items.push(item);
+			}
 
-  private removeFromCurrent(item: T): void {
-    this.currentItems = this.currentItems.filter(
-      v => !this.compareItems(item, v),
-    )
-  }
+			if (!isCurrentItem(item)) {
+				currentItems.push(item);
+			}
+		},
+		remove: (item: T) => {
+			removeFromCurrent(item);
 
-  private removeFromRemoved(item: T): void {
-    this.removed = this.removed.filter(v => !this.compareItems(item, v))
-  }
+			if (isNewItem(item)) {
+				removeFromNew(item);
+				return;
+			}
 
-  private wasAddedInitially(item: T): boolean {
-    return (
-      this.initial.filter((v: T) => this.compareItems(item, v)).length !== 0
-    )
-  }
+			if (!isRemovedItem(item)) {
+				removed.push(item);
+			}
+		},
+		update: (items: T[]) => {
+			const newItems = items.filter((a) => {
+				return !currentItems.some((b) => compareItems(a, b));
+			});
 
-  public exists(item: T): boolean {
-    return this.isCurrentItem(item)
-  }
+			const removedItems = currentItems.filter((a) => {
+				return !items.some((b) => compareItems(a, b));
+			});
 
-  public add(item: T): void {
-    if (this.isRemovedItem(item)) {
-      this.removeFromRemoved(item)
-    }
+			currentItems = items;
+			new_items = newItems;
+			removed = removedItems;
+		},
+	};
+}
 
-    if (!this.isNewItem(item) && !this.wasAddedInitially(item)) {
-      this.new.push(item)
-    }
-
-    if (!this.isCurrentItem(item)) {
-      this.currentItems.push(item)
-    }
-  }
-
-  public remove(item: T): void {
-    this.removeFromCurrent(item)
-
-    if (this.isNewItem(item)) {
-      this.removeFromNew(item)
-
-      return
-    }
-
-    if (!this.isRemovedItem(item)) {
-      this.removed.push(item)
-    }
-  }
-
-  public update(items: T[]): void {
-    const newItems = items.filter(a => {
-      return !this.getItems().some(b => this.compareItems(a, b))
-    })
-
-    const removedItems = this.getItems().filter(a => {
-      return !items.some(b => this.compareItems(a, b))
-    })
-
-    this.currentItems = items
-    this.new = newItems
-    this.removed = removedItems
-  }
+export interface WatchedListParams<T> {
+	compareItems: (a: T, b: T) => boolean;
+	initialItems?: T[];
 }

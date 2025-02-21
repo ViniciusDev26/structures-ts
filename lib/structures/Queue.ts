@@ -1,35 +1,28 @@
-export class Queue<T> {
-  private queue: T[] = [];
+export function Queue<T>(params?: QueueParams<T>) {
+	let queue: T[] = params?.initialItems ?? [];
 
-  constructor(items?: T[]) {
-    if (items) this.queue = items;
-  }
+	return {
+		enqueue: (item: T) => {
+			queue.push(item);
+		},
+		dequeue: () => {
+			return queue.shift();
+		},
+		peek: () => {
+			return queue[0];
+		},
+		get size() {
+			return queue.length;
+		},
+		get isEmpty() {
+			return queue.length === 0;
+		},
+		clear: () => {
+			queue = [];
+		},
+	};
+}
 
-  public get size(): number {
-    return this.queue.length;
-  }
-
-  public get isEmpty(): boolean {
-    return this.size === 0;
-  }
-
-  public enqueue(item: T): void {
-    this.queue.push(item);
-  }
-
-  public dequeue(): T | undefined {
-    return this.queue.shift();
-  }
-
-  public peek(): T | undefined {
-    return this.queue[0];
-  }
-
-  public clear(): void {
-    this.queue = [];
-  }
-
-  public toArray(): T[] {
-    return this.queue.slice();
-  }
+export interface QueueParams<T> {
+	initialItems?: T[];
 }
