@@ -1,6 +1,6 @@
 {
   "name": "structures-ts",
-  "version": "1.0.8",
+  "version": "2.0.0",
   "type": "module",
   "main": "dist/index.js",
   "types": "dist/index.d.ts",
@@ -12,13 +12,10 @@
     "url": "https://github.com/ViniciusDev26/structures-ts"
   },
   "scripts": {
-    "build": "rimraf dist && tsc"
     "build": "rimraf dist && tsc",
     "test": "vitest"
   },
   "devDependencies": {
-    "rimraf": "^5.0.5",
-    "vitest": "^1.2.1"
     "rimraf": "^6.0.1",
     "vitest": "^3.0.6"
   },
