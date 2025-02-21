@@ -1,39 +1,27 @@
 import { WatchedList } from "../../lib";
 
-class Music {
-  constructor(
-    public name: string,
-  ) {}
+interface Music {
+	name: string;
 }
-
-class MusicList extends WatchedList<Music> {
-  compareItems(a: Music, b: Music): boolean {
-    return a.name === b.name;
-  }
-}
-
-class Playlist {
-  constructor(
-    public name: string,
-    public musics: MusicList
-  ) {}
-}
-
 
 function main() {
-  const music1 = new Music("Music 1");
-  const music2 = new Music("Music 2");
-  const music3 = new Music("Music 3");
+	const music1: Music = { name: "Music 1" };
+	const music2: Music = { name: "Music 2" };
+	const music3: Music = { name: "Music 3" };
 
-  const playlist = new Playlist("Playlist", new MusicList([music1, music2]));
+	const playlist = WatchedList<Music>({
+		initialItems: [music1, music2],
+		compareItems: (a, b) => a.name === b.name,
+	});
 
-  playlist.musics.add(music3);
-  playlist.musics.remove(music2);
+	playlist.add(music3);
+	playlist.remove(music2);
 
-  console.log({
-    added: playlist.musics.getNewItems(),
-    removed: playlist.musics.getRemovedItems(),
-    current: playlist.musics.getItems(),
-  });
+	console.log({
+		// {added: [{name: "Music 3"}], removed: [{name: "Music 2"}], current: [{name: "Music 1"}, {name: "Music 3"}]}
+		added: playlist.getNewItems(),
+		removed: playlist.getRemovedItems(),
+		current: playlist.getItems(),
+	});
 }
 main();
