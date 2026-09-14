@@ -1,25 +1,28 @@
 {
-  "name": "structures-ts",
-  "version": "2.0.1",
-  "type": "module",
-  "main": "dist/index.js",
-  "types": "dist/index.d.ts",
-  "files": [
-    "/dist"
-  ],
-  "repository": {
-    "type": "git",
-    "url": "https://github.com/ViniciusDev26/structures-ts"
-  },
-  "scripts": {
-    "build": "rimraf dist && tsc",
-    "test": "vitest"
-  },
-  "devDependencies": {
-    "rimraf": "^6.0.1",
-    "vitest": "^3.0.6"
-  },
-  "peerDependencies": {
-    "typescript": "^5.0.0"
-  }
+	"name": "structures-ts",
+	"version": "2.0.1",
+	"type": "module",
+	"main": "dist/index.js",
+	"types": "dist/index.d.ts",
+	"files": [
+		"/dist"
+	],
+	"repository": {
+		"type": "git",
+		"url": "https://github.com/ViniciusDev26/structures-ts"
+	},
+	"license": "MIT",
+	"scripts": {
+		"build": "rimraf dist && tsc",
+		"test": "vitest run",
+		"test:watch": "vitest",
+		"lint": "biome check .",
+		"lint:fix": "biome check --write ."
+	},
+	"devDependencies": {
+		"@biomejs/biome": "^2.5.13",
+		"rimraf": "^6.0.1",
+		"typescript": "^5.7.3",
+		"vitest": "^3.0.6"
+	}
 }

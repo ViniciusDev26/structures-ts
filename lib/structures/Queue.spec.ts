@@ -1,4 +1,4 @@
-import { describe, it, expect } from "vitest";
+import { describe, expect, it } from "vitest";
 import { Queue } from "./Queue";
 
 describe("Queue", () => {
@@ -48,5 +48,17 @@ describe("Queue", () => {
 		stringList.clear();
 
 		expect(stringList.isEmpty).toBeTruthy();
+	});
+
+	it("should return undefined when dequeuing an empty queue", () => {
+		const numberQueue = Queue<number>();
+
+		expect(numberQueue.dequeue()).toBeUndefined();
+	});
+
+	it("should return undefined when peeking an empty queue", () => {
+		const numberQueue = Queue<number>();
+
+		expect(numberQueue.peek()).toBeUndefined();
 	});
 });

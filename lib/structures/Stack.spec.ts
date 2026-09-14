@@ -1,4 +1,4 @@
-import { describe, it, expect } from "vitest";
+import { describe, expect, it } from "vitest";
 import { Stack } from "./Stack";
 
 describe("Stack", () => {
@@ -48,5 +48,17 @@ describe("Stack", () => {
 		stringList.clear();
 
 		expect(stringList.isEmpty).toBeTruthy();
+	});
+
+	it("should return undefined when popping an empty stack", () => {
+		const numberStack = Stack<number>();
+
+		expect(numberStack.pop()).toBeUndefined();
+	});
+
+	it("should return undefined when peeking an empty stack", () => {
+		const numberStack = Stack<number>();
+
+		expect(numberStack.peek()).toBeUndefined();
 	});
 });

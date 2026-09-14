@@ -1,15 +1,10 @@
 {
-  "compilerOptions": {
-    "module": "commonjs",
-    "target": "es2019",
-    "declaration": true,
-    "outDir": "./dist"
-  },
-  "include": [
-    "lib/**/*"
-  ],
-  "exclude": [
-    "node_modules",
-    "**/*.spec.ts"
-  ]
+	"compilerOptions": {
+		"module": "commonjs",
+		"target": "es2019",
+		"declaration": true,
+		"outDir": "./dist"
+	},
+	"include": ["lib/**/*"],
+	"exclude": ["node_modules", "**/*.spec.ts"]
 }

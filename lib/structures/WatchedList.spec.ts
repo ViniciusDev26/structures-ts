@@ -1,4 +1,4 @@
-import { describe, it, expect } from "vitest";
+import { describe, expect, it } from "vitest";
 import { WatchedList } from "./WatchedList";
 
 describe("WatchedList", () => {
@@ -33,5 +33,28 @@ describe("WatchedList", () => {
 		expect(stringList.getItems().length).toBe(3);
 		expect(stringList.getItems()).contain("Jane");
 		expect(stringList.getNewItems()).contain("Jane");
+	});
+
+	it("should recompute new and removed items on update", () => {
+		const stringList = WatchedList({
+			compareItems: (a, b) => a === b,
+			initialItems: ["John", "Doe"],
+		});
+
+		stringList.update(["Doe", "Jane"]);
+
+		expect(stringList.getItems()).toEqual(["Doe", "Jane"]);
+		expect(stringList.getNewItems()).toEqual(["Jane"]);
+		expect(stringList.getRemovedItems()).toEqual(["John"]);
+	});
+
+	it("should check if an item exists", () => {
+		const stringList = WatchedList({
+			compareItems: (a, b) => a === b,
+			initialItems: ["John"],
+		});
+
+		expect(stringList.exists("John")).toBe(true);
+		expect(stringList.exists("Jane")).toBe(false);
 	});
 });

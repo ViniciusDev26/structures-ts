@@ -1,14 +1,31 @@
+/**
+ * Creates a list that tracks additions and removals relative to its initial
+ * state (or the state since the last `update` call). Useful for diffing a
+ * collection against a backend before sending a sync/patch request.
+ *
+ * @example
+ * ```ts
+ * const playlist = WatchedList<Music>({
+ *   initialItems: [music1, music2],
+ *   compareItems: (a, b) => a.name === b.name,
+ * });
+ * playlist.add(music3);
+ * playlist.remove(music2);
+ * playlist.getNewItems();     // [music3]
+ * playlist.getRemovedItems(); // [music2]
+ * ```
+ */
 export function WatchedList<T>({
 	compareItems,
 	initialItems,
 }: WatchedListParams<T>) {
-	let currentItems = initialItems || [];
-	let initial = initialItems || [];
-	let new_items = [];
-	let removed = [];
+	let currentItems: T[] = initialItems || [];
+	const initial: T[] = initialItems || [];
+	let newItems: T[] = [];
+	let removed: T[] = [];
 
 	function isNewItem(item: T) {
-		return new_items.filter((v) => compareItems(item, v)).length !== 0;
+		return newItems.filter((v) => compareItems(item, v)).length !== 0;
 	}
 
 	function isCurrentItem(item: T) {
@@ -20,7 +37,7 @@ export function WatchedList<T>({
 	}
 
 	function removeFromNew(item: T) {
-		new_items = new_items.filter((v) => !compareItems(v, item));
+		newItems = newItems.filter((v) => !compareItems(v, item));
 	}
 
 	function removeFromCurrent(item: T) {
@@ -36,23 +53,29 @@ export function WatchedList<T>({
 	}
 
 	return {
+		/** All items currently in the list. */
 		getItems: () => currentItems,
-		getNewItems: () => new_items,
+		/** Items added since the initial state (or since the last `update`). */
+		getNewItems: () => newItems,
+		/** Items removed since the initial state (or since the last `update`). */
 		getRemovedItems: () => removed,
+		/** Whether the item is currently in the list. */
 		exists: (item: T) => isCurrentItem(item),
+		/** Adds an item to the list, tracking it as new unless it was part of the initial state. */
 		add: (item: T) => {
 			if (isRemovedItem(item)) {
 				removeFromRemoved(item);
 			}
 
 			if (!isNewItem(item) && !wasAddedInitially(item)) {
-				new_items.push(item);
+				newItems.push(item);
 			}
 
 			if (!isCurrentItem(item)) {
 				currentItems.push(item);
 			}
 		},
+		/** Removes an item from the list, tracking it as removed unless it had only ever been a new (unsaved) item. */
 		remove: (item: T) => {
 			removeFromCurrent(item);
 
@@ -65,18 +88,19 @@ export function WatchedList<T>({
 				removed.push(item);
 			}
 		},
+		/** Replaces the whole list with `items`, recomputing new/removed relative to the current state. */
 		update: (items: T[]) => {
-			const newItems = items.filter((a) => {
+			const nextNewItems = items.filter((a) => {
 				return !currentItems.some((b) => compareItems(a, b));
 			});
 
-			const removedItems = currentItems.filter((a) => {
+			const nextRemovedItems = currentItems.filter((a) => {
 				return !items.some((b) => compareItems(a, b));
 			});
 
 			currentItems = items;
-			new_items = newItems;
-			removed = removedItems;
+			newItems = nextNewItems;
+			removed = nextRemovedItems;
 		},
 	};
 }
